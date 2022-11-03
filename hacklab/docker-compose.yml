@@ -1,0 +1,641 @@
+version: "3"
+
+services:
+
+  web:
+
+    image: vulhub/wordpress:4.6
+
+    depends_on:
+
+      - mysql
+
+    environment:
+
+      - WORDPRESS_DB_HOST=mysql:3306
+
+      - WORDPRESS_DB_USER=root
+
+      - WORDPRESS_DB_PASSWORD=root
+
+      - WORDPRESS_DB_NAME=wordpress
+
+    ports:
+
+      - "8085:80"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.7
+
+  mysql:
+
+    image: mysql:latest
+
+    environment:
+
+    - MYSQL_ROOT_PASSWORD=root
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.8
+
+  kali:
+
+    image: kalilinux/kali-rolling:latest
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.10
+
+    tty: true
+
+  redis:
+
+    image: redis:5.0.9-alpine
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.50
+
+  postgresql:
+
+    image: postgres:12-alpine
+
+    environment:
+
+      - POSTGRES_USER=gitlab
+
+      - POSTGRES_PASSWORD=password
+
+      - POSTGRES_DB=gitlabhq_production
+
+      - DB_EXTENSION=pg_trgm,btree_gist
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.51
+
+  gitlab:
+
+    image: gitlab/gitlab-ee:latest
+
+    depends_on:
+
+      - postgresql
+
+    ports:
+
+      - "8089:80"
+
+      - "10022:22"
+
+    environment:
+
+      - DEBUG=false
+
+      - DB_ADAPTER=postgresql
+
+      - DB_HOST=postgresql
+
+      - DB_PORT=5432
+
+      - DB_USER=gitlab
+
+      - DB_PASS=password
+
+      - DB_NAME=gitlabhq_production
+
+      - REDIS_HOST=redis
+
+      - REDIS_PORT=6379
+
+      - GITLAB_HTTPS=false
+
+      - SSL_SELF_SIGNED=false
+
+      - GITLAB_HOST=localhost
+
+      - GITLAB_PORT=8080
+
+      - GITLAB_SSH_PORT=10022
+
+      - GITLAB_RELATIVE_URL_ROOT=
+
+      - GITLAB_SECRETS_DB_KEY_BASE=long-long-long-long-long-long-secret-key-is-here1
+
+      - GITLAB_SECRETS_SECRET_KEY_BASE=long-long-long-long-long-long-secret-key-is-here2
+
+      - GITLAB_SECRETS_OTP_KEY_BASE=long-long-long-long-long-long-secret-key-is-her3
+
+      - TZ=Asia/Kolkata
+
+      - GITLAB_TIMEZONE=Kolkata
+
+      - GITLAB_ROOT_PASSWORD=vulhub123456
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.52
+
+  couchdb:
+
+    image: vulhub/couchdb:1.6.0
+
+    ports:
+
+      - "5984:5984"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.53
+
+  discuz:
+
+    image: vulhub/discuz:x3.4
+
+    depends_on:
+
+      - discuzdb
+
+    ports:
+
+      - "8180:80"
+
+    networks:
+
+      asgard:
+
+        ipv4_address: 10.89.1.20
+
+  discuzdb:
+
+    image: mariadb
+
+    restart: always
+
+    environment:
+
+      MYSQL_ROOT_PASSWORD: root
+
+      MYSQL_DATABASE: ultrax
+
+    networks:
+
+      asgard:
+
+        ipv4_address: 10.89.1.21
+
+  gitea:
+
+    image: vulhub/gitea:1.4.0
+
+    ports:
+
+      - "3000:3000"
+
+      - "20022:22"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.56
+
+  solr:
+
+    image: vulhub/solr:8.11.0
+
+    ports:
+
+      - "8983:8983"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.57
+
+  phpmyadmin:
+
+    image: vulhub/phpmyadmin:4.8.1
+
+    volumes:
+
+      - ./config.inc.php:/var/www/html/config.inc.php
+
+    ports:
+
+      - "8182:80"
+
+    depends_on:
+
+      - mysql41
+
+    networks:
+
+      anotherone:
+
+        ipv4_address: 192.168.21.21
+
+  mysql41:
+
+    image: mysql:latest
+
+    environment:
+
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
+      - MYSQL_DATABASE=test
+
+      - MYSQL_USER=test
+
+      - MYSQL_PASSWORD=test
+
+    networks:
+
+      anotherone:
+
+        ipv4_address: 192.168.21.20
+
+  drupal1:
+
+    image: drupal:8.5.0
+
+    ports:
+
+      - "8185:80"
+
+    networks:
+
+      anotherone:
+
+        ipv4_address: 192.168.21.22
+
+networks:
+
+  hacked:
+
+    ipam:
+
+      driver: default
+
+      config:
+
+        - subnet: "192.168.45.0/24"
+
+  anotherone:
+
+    ipam:
+
+      driver: default
+
+      config:
+
+        - subnet: "192.168.21.0/24"
+
+  asgard:
+
+    ipam:
+
+      driver: default
+
+      config:
+
+        - subnet: "10.89.1.0/24"
+cat: t: No such file or directory
+ubuntu@debian:~/docker$ cat ./hacklab/docker-compose.yml
+version: "3"
+
+services:
+
+  web:
+
+    image: vulhub/wordpress:4.6
+
+    depends_on:
+
+      - mysql
+
+    environment:
+
+      - WORDPRESS_DB_HOST=mysql:3306
+
+      - WORDPRESS_DB_USER=root
+
+      - WORDPRESS_DB_PASSWORD=root
+
+      - WORDPRESS_DB_NAME=wordpress
+
+    ports:
+
+      - "8085:80"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.7
+
+  mysql:
+
+    image: mysql:latest
+
+    environment:
+
+    - MYSQL_ROOT_PASSWORD=root
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.8
+
+  kali:
+
+    image: kalilinux/kali-rolling:latest
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.10
+
+    tty: true
+
+  redis:
+
+    image: redis:5.0.9-alpine
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.50
+
+  postgresql:
+
+    image: postgres:12-alpine
+
+    environment:
+
+      - POSTGRES_USER=gitlab
+
+      - POSTGRES_PASSWORD=password
+
+      - POSTGRES_DB=gitlabhq_production
+
+      - DB_EXTENSION=pg_trgm,btree_gist
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.51
+
+  gitlab:
+
+    image: gitlab/gitlab-ee:latest
+
+    depends_on:
+
+      - postgresql
+
+    ports:
+
+      - "8089:80"
+
+      - "10022:22"
+
+    environment:
+
+      - DEBUG=false
+
+      - DB_ADAPTER=postgresql
+
+      - DB_HOST=postgresql
+
+      - DB_PORT=5432
+
+      - DB_USER=gitlab
+
+      - DB_PASS=password
+
+      - DB_NAME=gitlabhq_production
+
+      - REDIS_HOST=redis
+
+      - REDIS_PORT=6379
+
+      - GITLAB_HTTPS=false
+
+      - SSL_SELF_SIGNED=false
+
+      - GITLAB_HOST=localhost
+
+      - GITLAB_PORT=8080
+
+      - GITLAB_SSH_PORT=10022
+
+      - GITLAB_RELATIVE_URL_ROOT=
+
+      - GITLAB_SECRETS_DB_KEY_BASE=long-long-long-long-long-long-secret-key-is-here1
+
+      - GITLAB_SECRETS_SECRET_KEY_BASE=long-long-long-long-long-long-secret-key-is-here2
+
+      - GITLAB_SECRETS_OTP_KEY_BASE=long-long-long-long-long-long-secret-key-is-her3
+
+      - TZ=Asia/Kolkata
+
+      - GITLAB_TIMEZONE=Kolkata
+
+      - GITLAB_ROOT_PASSWORD=vulhub123456
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.52
+
+  couchdb:
+
+    image: vulhub/couchdb:1.6.0
+
+    ports:
+
+      - "5984:5984"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.53
+
+  discuz:
+
+    image: vulhub/discuz:x3.4
+
+    depends_on:
+
+      - discuzdb
+
+    ports:
+
+      - "8180:80"
+
+    networks:
+
+      asgard:
+
+        ipv4_address: 10.89.1.20
+
+  discuzdb:
+
+    image: mariadb
+
+    restart: always
+
+    environment:
+
+      MYSQL_ROOT_PASSWORD: root
+
+      MYSQL_DATABASE: ultrax
+
+    networks:
+
+      asgard:
+
+        ipv4_address: 10.89.1.21
+
+  gitea:
+
+    image: vulhub/gitea:1.4.0
+
+    ports:
+
+      - "3000:3000"
+
+      - "20022:22"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.56
+
+  solr:
+
+    image: vulhub/solr:8.11.0
+
+    ports:
+
+      - "8983:8983"
+
+    networks:
+
+      hacked:
+
+        ipv4_address: 192.168.45.57
+
+  phpmyadmin:
+
+    image: vulhub/phpmyadmin:4.8.1
+
+    volumes:
+
+      - ./config.inc.php:/var/www/html/config.inc.php
+
+    ports:
+
+      - "8182:80"
+
+    depends_on:
+
+      - mysql41
+
+    networks:
+
+      anotherone:
+
+        ipv4_address: 192.168.21.21
+
+  mysql41:
+
+    image: mysql:latest
+
+    environment:
+
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
+      - MYSQL_DATABASE=test
+
+      - MYSQL_USER=test
+
+      - MYSQL_PASSWORD=test
+
+    networks:
+
+      anotherone:
+
+        ipv4_address: 192.168.21.20
+
+  drupal1:
+
+    image: drupal:8.5.0
+
+    ports:
+
+      - "8185:80"
+
+    networks:
+
+      anotherone:
+
+        ipv4_address: 192.168.21.22
+
+networks:
+
+  hacked:
+
+    ipam:
+
+      driver: default
+
+      config:
+
+        - subnet: "192.168.45.0/24"
+
+  anotherone:
+
+    ipam:
+
+      driver: default
+
+      config:
+
+        - subnet: "192.168.21.0/24"
+
+  asgard:
+
+    ipam:
+
+      driver: default
+
+      config:
+
+        - subnet: "10.89.1.0/24"
+        
