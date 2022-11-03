@@ -1,0 +1,24 @@
+version: "3"
+services:
+  app:
+    image: 'vaultwarden/server:latest'
+    environment:
+      - 'ADMIN_TOKEN=TOKEN'
+    restart: unless-stopped
+    ports:
+      - '90:80'
+    volumes:
+      - './data:/data'
+
+
+version: "3"
+services:
+  app:
+    image: 'vividboarder/vaultwarden_ldap:latest'
+    environment:
+      - 'ADMIN_TOKEN=TOKEN'
+    restart: unless-stopped
+    ports:
+      - '90:80'
+    volumes:
+      - './data:/data'
