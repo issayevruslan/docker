@@ -1,0 +1,9 @@
+version: '3'
+services:
+  app:
+    image: 'tenableofficial/nessus:latest'
+#    restart: unless-stopped
+    ports:
+      - '8834:8834'
+    volumes:
+      - ./data:/data/
